@@ -1,0 +1,30 @@
+CROSS_HOST="x86_64-w64-mingw32"
+ORIG_PN="bzip2"
+inherit cross
+
+NAME="mingw64-x86_64-bzip2"
+VERSION=1.0.6
+RELEASE=1
+CATEGORY="Devel"
+SUMMARY="libbz2 for MinGW-w64 Win64 toolchain"
+DESCRIPTION="This package does NOT contain cygwin binaries.  Instead, it
+contains msvcrt-linked binaries (aka 'mingw').  It is for use with the
+mingw64-x86_64-gcc cross compiler, and installs into the
+/usr/x86_64-w64-mingw32/sys-root/mingw/{lib,include} directories."
+HOMEPAGE="http://www.bzip.org/"
+SRC_URI="http://www.bzip.org/${PV}/bzip2-${PV}.tar.gz"
+
+src_compile() {
+	lndirs
+	cd ${B}
+	cygmake clean
+	cygmake libbz2.a CC=${CC} AR=${CROSS_HOST}-ar RANLIB=${CROSS_HOST}-ranlib
+	${CC} -shared -Wl,--out-implib,libbz2.dll.a -o libbz2-1.dll *.o
+}
+
+src_install() {
+	cd ${B}
+	dobin *.dll
+	doinclude bzlib.h
+	dolib libbz2.a libbz2.dll.a
+}
