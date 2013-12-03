@@ -1,0 +1,18 @@
+Use cdecl to allow AC_CHECK_LIB calls to work normally.
+
+--- origsrc/bzip2-1.0.6/bzlib.h	2010-09-10 18:08:42.000000000 -0500
++++ src/bzip2-1.0.6/bzlib.h	2013-07-26 00:11:35.057633100 -0500
+@@ -82,11 +82,11 @@ typedef
+ #      undef small
+ #   endif
+ #   ifdef BZ_EXPORT
+-#   define BZ_API(func) WINAPI func
++#   define BZ_API(func) func
+ #   define BZ_EXTERN extern
+ #   else
+    /* import windows dll dynamically */
+-#   define BZ_API(func) (WINAPI * func)
++#   define BZ_API(func) (* func)
+ #   define BZ_EXTERN
+ #   endif
+ #else
